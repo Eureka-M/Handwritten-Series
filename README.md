@@ -12,6 +12,7 @@ some handwritten examples
     -   每个 promise 都有一个状态可能为 pending 或 resolved，rejected,初始状态都为 pending
     -   每个 promise 有自己的 data
 -   实现 then 方法
+    -   promise.then()是一个微任务
 -   实现 catch 方法
 -   实现 Promise.resolve
 -   实现 Promise.reject
