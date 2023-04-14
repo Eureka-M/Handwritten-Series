@@ -1,0 +1,87 @@
+<!-- 
+    history模式：
+    实现核心：HTML5 的 history 全局对象。
+        window.history.go 跳转到浏览器会话历史中的制定的某一个记录页
+        window.history.forward 跳转到浏览器会话历史中的下一页，跟浏览器的前进按钮的功能相同
+        window.history.back 跳转到浏览器会话历史中的上一页，跟浏览器的回退按钮的功能相同
+        window.history.pushState 可以将给定的数据压入到浏览器会话历史栈中
+        window.history.replaceState 将当前的会话页面的 url 替换成指定的数据
+            pushState / replaceState: 
+                都会改变当前页面显示的 url，但都不会刷新页面。
+                pushState 是压入浏览器的会话历史栈中，会使得 history.length 加 1
+                replaceState 是替换当前的这条会话历史，因此不会增加 history.length
+        window.history.popState
+            pushState 和 replaceState 不会触发 popState
+            浏览器的某些行为会导致 popState，比如 go、back、forward
+            popState 事件对象中的 state 属性，是在通过 pushState 或 replaceState 时，传入的数据
+    注意：
+        1. 浏览器的安全策略不允许在本地文件系统（file://）中使用 pushState() 方法创建历史记录，因为这可能导致跨站点脚本攻击（XSS）
+        Failed to execute 'pushState' on 'History': A history state object with URL。
+        所以要启动一个本地的 Web 服务器。
+        2. 没刷新时，只是通过pushState改变URL，不刷新页面。一旦在某个路由下刷新页面的时候，就会报错，相当于在该路径下去访问静态资源 index.html
+        如: http://xxx.xx.xx.xx:xxx/shop 刷新会去找 http://xxx.xx.xx.xx:xxx/shop/index.html
+        解决：配置nginx，告诉服务器，当我们访问的路径资源不存在的时候，默认指向静态资源index.html
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>history 路由实现</title>
+    <style>
+        main {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <nav id="nav">
+        <a href="/">首页</a>
+        <a href="/shop">商城</a>
+    </nav>
+    <main id="content"></main>
+    <script>
+        const routes = [
+            {
+                path: '/',
+                name: 'home',
+                component: '<div>首页内容</div>'
+            },
+            {
+                path: '/shop',
+                name: 'shop',
+                component: '<div>商城内容</div>'
+            }
+        ]
+
+        function matchComponent(path) {
+            for (let i = 0; i < routes.length; i++) {
+                let route = routes[i]
+                let pattern = new RegExp('^' + route.path + '$')
+                if (pattern.test(path)) {
+                    history.pushState(null, null, route.path)
+                    document.getElementById('content').innerHTML = route.component
+                }
+            }
+        }
+
+        window.addEventListener('load', function() {
+            matchComponent('/')
+        })
+        window.addEventListener('popState', function () {
+            matchComponent(location.pathname)
+        })
+        
+        let nav = document.getElementById('nav')
+        nav.addEventListener('click', function (event) {
+            let target = event.target
+            if (target.tagName === 'A' && target.getAttribute('href')) {
+                event.preventDefault()
+                matchComponent(target.getAttribute('href'))
+            }
+        })
+    </script>
+</body>
+</html>
