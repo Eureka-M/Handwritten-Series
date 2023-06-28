@@ -10,3 +10,5 @@ some handwritten examples
 + hash
 + history
 + vue-router
+
+### 并发请求

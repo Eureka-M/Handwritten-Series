@@ -4,13 +4,14 @@ const arr = []
 for (let i = 0; i < 100; i++) {
     arr.push(
         () => {
-            new Promise((resolve) => {
+            return new Promise((resolve) => {
                 setTimeout(() => {
                     console.log("done", i)
                     resolve()
                 }, 100 * i)
             })
         }
+        
     )
 }
 
