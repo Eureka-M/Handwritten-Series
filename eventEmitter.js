@@ -26,11 +26,10 @@ class EventEmitter {
     }
 
     once(eventKey, callback) {
-        let onceCb = (data) => {
+        this.on(eventKey, (data) => {
             callback(data)
-            this.off(eventKey, onceCb)
-        }
-        this.on(eventKey, onceCb)
+            this.off(eventKey)
+        })
     }
 }
 
