@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <script>
+            let index = 0;
+            setInterval(() => {
+                localStorage.supper = `supper ${index++}`;
+            }, 1000);
+
+            window.addEventListener("storage", (e) => {
+                console.log("被修改的键: ", e.key);
+                console.log("旧值: ", e.oldValue);
+                console.log("新值: ", e.newValue);
+                console.log("----------");
+            });
+        </script>
+    </body>
+</html>

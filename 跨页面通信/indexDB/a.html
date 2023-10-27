@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <script>
+            let index = 0;
+            // 打开或创建 IndexedDB 数据库
+            const request = indexedDB.open("database", 1);
+
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                const objectStore = db.createObjectStore("dataStore", {
+                    keyPath: "key",
+                });
+            };
+
+            request.onsuccess = (event) => {
+                const db = event.target.result;
+                const transaction = db.transaction(["dataStore"], "readwrite");
+                const objectStore = transaction.objectStore("dataStore");
+
+                // 存储数据
+
+                objectStore.put({ key: "supper", value: `moment` });
+
+                transaction.oncomplete = () => {
+                    db.close();
+                };
+            };
+        </script>
+    </body>
+</html>

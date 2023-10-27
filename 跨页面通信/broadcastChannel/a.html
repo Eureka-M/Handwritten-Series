@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <script>
+
+            // 每个 BroadcastChannel 对象都需要使用一个唯一的名称来标识通道，这个名称在同一域名下的不同页面之间必须是唯一的。它允许同一域名下的不同页面之间进行通信
+            const broad = new BroadcastChannel("moment");
+
+            setInterval(() => {
+                broad.postMessage({
+                    value: `moment ${new Date()}`,
+                });
+            }, 3000);
+
+            broad.onmessage = function (e) {
+                console.log(e.data);
+            };
+        </script>
+    </body>
+</html>

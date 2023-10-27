@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <script>
+            const broad = new BroadcastChannel("moment");
+            let index = 1;
+
+            setInterval(() => {
+                broad.postMessage({
+                    value: `supper ${index++}`,
+                });
+            }, 3000);
+
+            broad.onmessage = function (e) {
+                console.log(e.data);
+            };
+        </script>
+    </body>
+</html>

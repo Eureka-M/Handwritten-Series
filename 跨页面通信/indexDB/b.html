@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <script>
+            // 打开相同的 IndexedDB 数据库
+            const request = indexedDB.open("database", 1);
+
+            request.onsuccess = (event) => {
+                const db = event.target.result;
+                const transaction = db.transaction(["dataStore"], "readonly");
+                const objectStore = transaction.objectStore("dataStore");
+
+                // 获取数据
+                const getRequest = objectStore.get("supper");
+
+                getRequest.onsuccess = (event) => {
+                    const data = event.target.result;
+                    if (data) {
+                        console.log(data.value);
+                    }
+                };
+
+                transaction.oncomplete = () => {
+                    db.close();
+                };
+            };
+        </script>
+    </body>
+</html>
